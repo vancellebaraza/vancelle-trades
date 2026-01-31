@@ -2,7 +2,7 @@
 export enum Tab {
   ANALYZE = 'ANALYZE',
   DECISION = 'DECISION',
-  EXPLAIN = 'EXPLAIN',
+  SETTINGS = 'SETTINGS',
   LEARN = 'LEARN',
   JOURNAL = 'JOURNAL',
 }
@@ -22,6 +22,12 @@ export interface ExecutionPlan {
   positionSizing: string;
 }
 
+export interface ObservationProtocol {
+  reason: string;
+  indicatorsToWatch: string[];
+  reEvaluationCondition: string;
+}
+
 export interface AnalysisResult {
   status: 'COMPLETE' | 'INCOMPLETE';
   missingData?: string[];
@@ -30,10 +36,8 @@ export interface AnalysisResult {
   pair: string;
   timeframe: string;
   tradeDirective: 'BUY' | 'SELL' | 'WAIT';
-  waitReason?: string;
-  waitDuration?: string;
+  observationProtocol?: ObservationProtocol; // ONLY present if WAIT
   executionPlan?: ExecutionPlan; // ONLY present if BUY or SELL
-  riskManagement: string;
   drawingLayers: DrawingLayer[];
   qualityScore: number;
   reasoningConfidence: string;

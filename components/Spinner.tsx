@@ -1,51 +1,68 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Spinner: React.FC = () => {
   const messages = [
+    "INITIATING DIAGNOSTIC CORE",
+    "DECODING PIXEL DATA",
     "ISOLATING CHART GEOMETRY",
-    "POLLING LIQUIDITY LEVELS",
-    "RUNNING MONTE CARLO RISK MODELS",
-    "PARSING LIM'S TECHNICAL HANDBOOK",
+    "MAPPING SUPPORT & RESISTANCE ZONES",
     "EXTRACTING CANDLESTICK MOMENTUM",
-    "MAPPING STRUCTURAL RETESTS",
-    "DETERMINING OPTIMAL BIAS"
+    "POLLING INSTITUTIONAL LIQUIDITY",
+    "CROSS-REFERENCING LIM'S HANDBOOK",
+    "CALCULATING VOLATILITY INDEX",
+    "RUNNING CONFLUENCE CHECKS",
+    "GENERATING SCENARIO PROBABILITIES",
+    "COMPILING FINAL REPORT"
   ];
-  const [message, setMessage] = React.useState(messages[0]);
+  const [message, setMessage] = useState(messages[0]);
+  const [progress, setProgress] = useState(0);
 
-  React.useEffect(() => {
-    const intervalId = setInterval(() => {
+  useEffect(() => {
+    const messageInterval = setInterval(() => {
       setMessage(prevMessage => {
         const currentIndex = messages.indexOf(prevMessage);
         const nextIndex = (currentIndex + 1) % messages.length;
         return messages[nextIndex];
       });
-    }, 2000);
+    }, 1500); // Faster message cycling
 
-    return () => clearInterval(intervalId);
+    // Fake progress bar animation
+    const progressTimeout = setTimeout(() => {
+      setProgress(90); // Animate to 90% and hold
+    }, 100);
+
+    return () => {
+      clearInterval(messageInterval);
+      clearTimeout(progressTimeout);
+    };
   }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-full w-full bg-midnight">
-      <div className="relative flex items-center justify-center w-32 h-32">
-        {/* Outer Ring */}
-        <div className="absolute inset-0 border-2 border-white/5 rounded-full"></div>
-        {/* Spinning Primary Ring */}
-        <div className="absolute inset-0 border-t-2 border-bull rounded-full animate-[spin_1.5s_linear_infinite] shadow-[0_0_15px_rgba(0,245,155,0.4)]"></div>
-        {/* Counter-Spinning Secondary Ring */}
-        <div className="absolute inset-4 border-b-2 border-white/20 rounded-full animate-[spin_2s_linear_infinite_reverse]"></div>
-        {/* Inner Core */}
-        <div className="w-2 h-2 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div>
+      <div className="relative flex items-center justify-center w-28 h-28">
+        <div className="absolute inset-0 border border-white/5 rounded-full"></div>
+        <div className="absolute inset-0 border-t border-bull rounded-full animate-[spin_1.5s_linear_infinite] shadow-[0_0_20px_rgba(0,245,155,0.5)]"></div>
+        <div className="absolute inset-4 border-b border-white/10 rounded-full animate-[spin_2s_linear_infinite_reverse]"></div>
+        <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_8px_white]"></div>
       </div>
       
-      <div className="mt-12 flex flex-col items-center">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="mt-12 flex flex-col items-center w-full max-w-xs px-4">
+        <div className="flex items-center gap-2 mb-4">
            <span className="w-1.5 h-1.5 bg-bull rounded-full animate-ping"></span>
-           <span className="text-[10px] font-mono text-bull tracking-[0.2em] uppercase font-bold">Terminal Active</span>
+           <span className="text-[9px] font-mono text-bull tracking-[0.3em] uppercase font-bold">Engine Running</span>
         </div>
-        <p className="text-gray-400 text-xs font-mono transition-opacity duration-300 tracking-tight text-center max-w-xs h-8">
+        <p className="text-gray-500 text-[10px] font-mono transition-opacity duration-300 tracking-tight text-center h-8 font-light">
           {message}
         </p>
+
+        {/* Fake Progress Bar */}
+        <div className="w-full bg-border/20 rounded-full h-1 mt-4 overflow-hidden">
+          <div 
+            className="bg-bull h-1 rounded-full transition-all duration-[8000ms] ease-linear" 
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
       </div>
     </div>
   );

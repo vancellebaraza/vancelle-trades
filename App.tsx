@@ -7,6 +7,7 @@ import AnalyzeView from './views/AnalyzeView';
 import DecisionView from './views/DecisionView';
 import PlaceholderView from './views/PlaceholderView';
 import Spinner from './components/Spinner';
+import SettingsView from './views/SettingsView';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.ANALYZE);
@@ -20,28 +21,46 @@ const App: React.FC = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('vancelle_settings');
+    return saved ? JSON.parse(saved) : { accountBalance: 10000, riskPerTrade: 1 };
+  });
+
   useEffect(() => {
     localStorage.setItem('vancelle_logs', JSON.stringify(logs));
   }, [logs]);
 
-  const handleAnalysis = useCallback(async (image: string) => {
+  useEffect(() => {
+    localStorage.setItem('vancelle_settings', JSON.stringify(settings));
+  }, [settings]);
+
+  const handleAnalysis = useCallback(async (data: { image: string; pair: string; timeframe: string; notes: string }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const result = await analyzeChart(image, logs);
+      const result = await analyzeChart(data, logs);
       setAnalysisResult(result);
       if (result.status === 'COMPLETE') {
         const newLog: TradeLog = {
           id: Date.now().toString(),
           timestamp: Date.now(),
-          image,
+          image: data.image,
           result
         };
         setLogs(prev => [newLog, ...prev]);
       }
       setActiveTab(Tab.DECISION);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Analysis Fault');
+      console.error("Analysis failed:", err);
+      let message = 'An unknown error occurred during analysis.';
+      if (err instanceof Error) {
+        message = err.message;
+      } else if (typeof err === 'string') {
+        message = err;
+      } else if (err && typeof (err as any).message === 'string') {
+        message = (err as any).message;
+      }
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -69,25 +88,11 @@ const App: React.FC = () => {
         return <AnalyzeView onImageUpload={setChartImage} onAnalyze={handleAnalysis} chartImage={chartImage} error={error} />;
       case Tab.DECISION:
         if (analysisResult && chartImage) {
-          return <DecisionView result={analysisResult} chartImage={chartImage} onNewAnalysis={resetApp} onReviewSubmit={handleReviewSubmit} />;
+          return <DecisionView result={analysisResult} chartImage={chartImage} onNewAnalysis={resetApp} onReviewSubmit={handleReviewSubmit} settings={settings} />;
         }
         return <PlaceholderView title="NO ACTIVE SESSION" message="Upload a chart to begin technical extraction." />;
-      case Tab.EXPLAIN:
-        return (
-          <div className="p-6 space-y-4 font-light leading-tight">
-            <h2 className="text-xl font-bold text-white uppercase tracking-widest border-b border-border pb-2">STRATEGY VAULT</h2>
-            {[
-              { t: 'Lim Geometric S/R', d: 'Using swing points to identify institutional horizontal liquidity.' },
-              { t: 'Momentum Divergence', d: 'Detecting trend exhaustion through candle morphology.' },
-              { t: 'Confluence Matrix', d: 'Minimum 3 variables must align before trade issuance.' }
-            ].map(s => (
-              <div key={s.t} className="p-4 bg-surface border border-border rounded-xl">
-                <h4 className="text-bull text-[10px] font-bold uppercase mb-1">{s.t}</h4>
-                <p className="text-[11px] text-gray-400 tracking-tight">{s.d}</p>
-              </div>
-            ))}
-          </div>
-        );
+      case Tab.SETTINGS:
+        return <SettingsView settings={settings} onSettingsChange={setSettings} />;
       case Tab.LEARN:
         const total = logs.filter(l => l.review).length;
         const wins = logs.filter(l => l.review?.outcome === 'WIN').length;
