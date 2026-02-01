@@ -151,7 +151,7 @@ const App: React.FC = () => {
                <span className="text-bull/80 tracking-tighter">Diagnostic Engine active</span>
             </div>
           </header>
-          <main className="flex-grow overflow-y-auto pb-32 scroll-smooth">
+          <main className="flex-grow overflow-y-auto pb-32 md:pb-0 scroll-smooth">
             {renderContent()}
           </main>
           <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />

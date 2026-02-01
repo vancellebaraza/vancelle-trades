@@ -36,13 +36,16 @@ const NavItem: React.FC<{
 
 const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <div className="fixed bottom-4 left-4 right-4 max-w-[calc(32rem-2rem)] mx-auto h-20 glass border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden">
-      <div className="flex justify-around items-center h-full px-1">
-        <NavItem tab={Tab.ANALYZE} activeTab={activeTab} setActiveTab={setActiveTab} Icon={AnalyzeIcon} label="Scan" />
-        <NavItem tab={Tab.DECISION} activeTab={activeTab} setActiveTab={setActiveTab} Icon={DecisionIcon} label="Exec" />
-        <NavItem tab={Tab.SETTINGS} activeTab={activeTab} setActiveTab={setActiveTab} Icon={SettingsIcon} label="Risk" />
-        <NavItem tab={Tab.LEARN} activeTab={activeTab} setActiveTab={setActiveTab} Icon={LearnIcon} label="Edge" />
-        <NavItem tab={Tab.JOURNAL} activeTab={activeTab} setActiveTab={setActiveTab} Icon={JournalIcon} label="Logs" />
+    <div className="md:px-4 md:pb-4">
+      <div className="fixed bottom-4 left-4 right-4 max-w-[calc(32rem-2rem)] mx-auto h-20 glass border border-border/50 rounded-2xl shadow-2xl z-50 overflow-hidden
+                    md:relative md:bottom-auto md:left-auto md:right-auto md:max-w-none md:mx-0">
+        <div className="flex justify-around items-center h-full px-1">
+          <NavItem tab={Tab.ANALYZE} activeTab={activeTab} setActiveTab={setActiveTab} Icon={AnalyzeIcon} label="Scan" />
+          <NavItem tab={Tab.DECISION} activeTab={activeTab} setActiveTab={setActiveTab} Icon={DecisionIcon} label="Exec" />
+          <NavItem tab={Tab.SETTINGS} activeTab={activeTab} setActiveTab={setActiveTab} Icon={SettingsIcon} label="Risk" />
+          <NavItem tab={Tab.LEARN} activeTab={activeTab} setActiveTab={setActiveTab} Icon={LearnIcon} label="Edge" />
+          <NavItem tab={Tab.JOURNAL} activeTab={activeTab} setActiveTab={setActiveTab} Icon={JournalIcon} label="Logs" />
+        </div>
       </div>
     </div>
   );
