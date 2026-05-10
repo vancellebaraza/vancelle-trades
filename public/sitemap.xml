@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://vancelle-trades.vercel.app/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://vancelle-trades.vercel.app/exec</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vancelle-trades.vercel.app/risk</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vancelle-trades.vercel.app/edge</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vancelle-trades.vercel.app/logs</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>
